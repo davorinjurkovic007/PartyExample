@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PartyApi.Controllers
 {
@@ -19,6 +20,7 @@ namespace PartyApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("entrance")]
         public PartyExperience GetIntoTheEntrance()
         {
