@@ -12,7 +12,15 @@ builder.Services.AddControllers(options =>
 {
     var policy = new AuthorizationPolicyBuilder()
                        .RequireAuthenticatedUser()
-                       .RequireClaim("azp", builder.Configuration.GetSection("AzureAd:AccessControlList").Get<string[]>()!)
+                       //.RequireClaim("azp", builder.Configuration.GetSection("AzureAd:AccessControlList").Get<string[]>()!)
+                       .RequireRole("regular", "vip")
+                       .RequireAssertion(handler =>
+                       {
+                           var scopeClaim = handler.User.FindFirst("http://schemas.microsoft.com/identity/claims/scope");
+                           var scopes = scopeClaim?.Value.Split(' ');
+                           var hasScope = scopes?.Where(scope => scope == "access_as_user").Any() ?? false;
+                           return hasScope;
+                       })
                        .Build();
     options.Filters.Add(new AuthorizeFilter(policy));
 });

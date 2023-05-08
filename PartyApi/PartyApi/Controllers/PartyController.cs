@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 
 namespace PartyApi.Controllers
 {
@@ -60,6 +61,7 @@ namespace PartyApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "vip")]
         [Route("vip")]
         public PartyExperience GetIntoTheVip()
         {
@@ -76,6 +78,8 @@ namespace PartyApi.Controllers
         [Route("private-party")]
         public PartyExperience GetIntoThePrivateParty()
         {
+            HttpContext.VerifyUserHasAnyAcceptedScope("access_private_party");
+
             return new PartyExperience
             {
                 Date = DateTime.Now,
